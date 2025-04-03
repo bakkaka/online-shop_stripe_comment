@@ -1,0 +1,181 @@
+{# templates/home/index.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {# Barre de navigation supérieure #}
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark py-2 sticky-top">
+        <div class="container-fluid">
+            {# Logo à gauche #}
+            <a class="navbar-brand fw-bold fs-4" href="{{ path('app_home') }}">
+                <i class="bi bi-shop me-2"></i>MaBoutique
+            </a>
+            
+            {# Bouton toggle pour mobile #}
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            {# Contenu navbar #}
+            <div class="collapse navbar-collapse" id="navbarContent">
+                {# Zone de recherche centrée #}
+                <form class="d-flex mx-lg-4 my-2 my-lg-0 flex-grow-1" role="search">
+                    <div class="input-group">
+                        <input class="form-control" type="search" placeholder="Rechercher des produits..." aria-label="Search">
+                        <button class="btn btn-warning" type="submit">
+                            <i class="bi bi-search"></i>
+                        </button>
+                    </div>
+                </form>
+                
+                {# Liens à droite #}
+                <div class="d-flex">
+                    <a href="{{ path('app_login') }}" class="text-white text-decoration-none mx-3 d-flex align-items-center">
+                        <i class="bi bi-box-arrow-in-right me-2"></i>Login
+                    </a>
+                    <a href="{{ path('app_register') }}" class="text-white text-decoration-none mx-3 d-flex align-items-center">
+                        <i class="bi bi-person-plus me-2"></i>Register
+                    </a>
+                    <a href="#" class="text-white text-decoration-none ms-3 d-flex align-items-center">
+                        <i class="bi bi-cart3 fs-5 me-2"></i>Panier
+                        <span class="badge bg-danger ms-1">0</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    {# Contenu principal #}
+    <div class="container-fluid mt-3">
+        <div class="row">
+            {# Menu latéral - colonne gauche #}
+            <div class="col-lg-3 d-none d-lg-block">
+                <div class="card mb-3 sticky-top" style="top: 80px;">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0"><i class="bi bi-list-ul me-2"></i>Catégories</h5>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                       {# {% for categorie in categories %}#}
+                            <li class="list-group-item">
+                               {# <a href="{{ path('app_categorie_show', {id: categorie.id}) }}" #}
+                                   class="text-decoration-none d-flex justify-content-between align-items-center">
+                                    {#{{ categorie.nom }}#}
+                                   {# <span class="badge bg-primary rounded-pill">{{ categorie.produits|length }}</span>#}
+                                </a>
+                            </li>
+                       {# {% endfor %}#}
+                    </ul>
+                </div>
+            </div>
+            
+            {# Contenu principal - colonne droite #}
+            <div class="col-lg-9">
+                {# Bannière avec 3 images #}
+                <div id="mainCarousel" class="carousel slide mb-4" data-bs-ride="carousel">
+                    <div class="carousel-inner rounded-3">
+                        <div class="carousel-item active">
+                            <img src="https://via.placeholder.com/1200x400?text=Banniere+1" class="d-block w-100" alt="Bannière 1">
+                        </div>
+                        <div class="carousel-item">
+                            <img src="https://via.placeholder.com/1200x400?text=Banniere+2" class="d-block w-100" alt="Bannière 2">
+                        </div>
+                        <div class="carousel-item">
+                            <img src="https://via.placeholder.com/1200x400?text=Banniere+3" class="d-block w-100" alt="Bannière 3">
+                        </div>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#mainCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#mainCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+                
+                {# Section produits #}
+                <h4 class="mb-4 fw-bold">
+                    <i class="bi bi-star-fill text-warning me-2"></i>Nos produits phares
+                </h4>
+                
+                {# Produits en grille #}
+                <div class="row g-4">
+                    {% for produit in produits %}
+                        <div class="col-xl-3 col-lg-4 col-md-6">
+                            <div class="card h-100 border-0 shadow-sm hover-shadow transition-all">
+                                {% if produit.images|length > 0 %}
+                                    <img src="{{ asset('uploads/images/' ~ produit.images.first.url) }}" 
+                                         class="card-img-top p-3" 
+                                         alt="{{ produit.nom }}"
+                                         style="height: 200px; object-fit: contain;">
+                                {% else %}
+                                    <div class="card-img-top bg-light d-flex align-items-center justify-content-center" 
+                                         style="height: 200px;">
+                                        <i class="bi bi-image text-muted fs-1"></i>
+                                    </div>
+                                {% endif %}
+                                <div class="card-body pt-0">
+                                    <h5 class="card-title fw-bold">{{ produit.nom }}</h5>
+                                    <p class="card-text text-muted small">
+                                        {{ produit.description|u.truncate(80, '...') }}
+                                    </p>
+                                </div>
+                                <div class="card-footer bg-transparent border-0 d-flex justify-content-between align-items-center">
+                                    <span class="text-danger fw-bold">{{ produit.prix|number_format(2, ',', ' ') }} €</span>
+                                    <a href="{{ path('app_home_produit_show', {'id': produit.id}) }}" 
+                                       class="btn btn-sm btn-outline-primary">
+                                        <i class="bi bi-eye me-1"></i>Voir
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="col-12">
+                            <div class="alert alert-info">Aucun produit disponible pour le moment</div>
+                        </div>
+                    {% endfor %}
+                </div>
+                
+                {# Pagination #}
+                {% if pager.haveToPaginate() %}
+                    <div class="d-flex justify-content-center mt-5">
+                        {{ pagerfanta(pager, {
+                            'template': '@Pagerfanta/twitter_bootstrap5.html.twig',
+                            'routeName': 'app_home',
+                            'prev_message': '<i class="bi bi-chevron-left"></i>',
+                            'next_message': '<i class="bi bi-chevron-right"></i>',
+                            'css_container_class': 'pagination rounded overflow-hidden',
+                            'css_prev_class': 'page-item',
+                            'css_next_class': 'page-item',
+                            'css_disabled_class': 'disabled',
+                            'css_dots_class': 'page-item disabled',
+                            'css_active_class': 'active',
+                            'css_item_class': 'page-item',
+                            'css_link_class': 'page-link'
+                        }) }}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    <style>
+        .hover-shadow {
+            transition: all 0.3s ease;
+        }
+        .hover-shadow:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+        }
+        .transition-all {
+            transition: all 0.3s ease;
+        }
+        .carousel-control-prev, .carousel-control-next {
+            width: 5%;
+        }
+        .sticky-top {
+            z-index: 1019;
+        }
+    </style>
+{% endblock %}

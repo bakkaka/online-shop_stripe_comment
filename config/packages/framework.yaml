@@ -1,0 +1,38 @@
+# see https://symfony.com/doc/current/reference/configuration/framework.html
+framework:
+    secret: '%env(APP_SECRET)%'
+
+    # Note that the session will be started ONLY if you read or write from it.
+    session: true
+
+    #esi: true
+    #fragments: true
+
+when@test:
+    framework:
+        test: true
+        session:
+            storage_factory_id: session.storage.factory.mock_file
+    csp:
+        enabled: true
+        # Désactive les restrictions en dev (optionnel)
+        report_only: true  # Mode "rapport seulement" (ne bloque pas, juste des logs)
+        default_src: ["'self'", "http://localhost:8000"]
+        script_src: 
+            - "'self'"
+            - "http://localhost:8000"
+            - "https://js.stripe.com"
+            - "'unsafe-inline'"  # Stripe a besoin de inline JS
+            - "'unsafe-eval'"    # Stripe a besoin de eval()
+        img_src:
+            - "'self'"
+            - "data:"
+            - "http://localhost:8000"  # Permet les images locales
+            - "https://*.stripe.com"   # Permet les images Stripe
+        connect_src:
+            - "'self'"
+            - "http://localhost:8000"
+            - "https://api.stripe.com"  # Stripe API
+        frame_src:
+            - "'self'"
+            - "https://js.stripe.com"   # Iframes Stripe
