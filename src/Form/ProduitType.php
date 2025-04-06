@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Produit;
 use App\Entity\User;
+use App\Entity\Categorie;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -52,7 +53,12 @@ class ProduitType extends AbstractType
             ])
            // src/Form/ProduitType.php
 
-// ...
+->add('categorie', EntityType::class, [
+    'class' => Categorie::class,
+    'choice_label' => 'nom', // Affiche le nom de la catégorie dans la liste déroulante
+    'placeholder' => 'Choisissez une catégorie', // Optionnel
+    'required' => true,
+])
 
 ->add('images', CollectionType::class, [
     'entry_type' => ImageType::class,

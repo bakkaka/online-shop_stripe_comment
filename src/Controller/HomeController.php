@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Repository\ProduitRepository;
+use App\Repository\CategorieRepository;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,17 +16,20 @@ use App\Form\CommentaireType;
 class HomeController extends AbstractController
 {
     #[Route('/', name: 'app_home')]
-    public function index(ProduitRepository $produitRepository, Request $request): Response
+    public function index(ProduitRepository $produitRepository, Request $request, CategorieRepository $categorieRepository ): Response
     {
         $queryBuilder = $produitRepository->getPaginatorQueryBuilder();
         
         $pagerfanta = new Pagerfanta(new QueryAdapter($queryBuilder));
         $pagerfanta->setMaxPerPage(8);
         $pagerfanta->setCurrentPage($request->query->getInt('page', 1));
+
+        $categories = $categorieRepository->findAllWithProductCount();
         
         return $this->render('home/index.html.twig', [
             'produits' => $pagerfanta->getCurrentPageResults(),
             'pager' => $pagerfanta,
+            'categories' => $categories
         ]);
     }
 

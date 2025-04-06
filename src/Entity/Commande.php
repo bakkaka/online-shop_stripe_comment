@@ -17,40 +17,66 @@ class Commande
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'commandes')]
     #[ORM\JoinColumn(nullable: false)]
-    private User $user;
+    private ?User $user = null;
 
-    #[ORM\Column(type: 'decimal', precision: 10, scale: 2)]
+    #[ORM\OneToMany(targetEntity: CommandeProduit::class, mappedBy: 'commande', cascade: ['persist'])]
+    private Collection $commandeProduits;
+
+    #[ORM\Column(type: 'float')]
     private float $total;
 
-    #[ORM\Column(type: 'string', length: 50)]
-    private string $statut;
+    #[ORM\Column(type: 'string', length: 255)]
+    private string $statut = 'en_attente';
 
     #[ORM\Column(type: 'datetime')]
-    private \DateTimeInterface $createdAt;
-
-    #[ORM\OneToMany(targetEntity: CommandeProduit::class, mappedBy: 'commande', orphanRemoval: true)]
-    private Collection $commandeProduits;
+    private \DateTimeInterface $dateCreation;
 
     public function __construct()
     {
         $this->commandeProduits = new ArrayCollection();
+        $this->dateCreation = new \DateTime();
     }
-
-    // Getters et Setters
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getUser(): User
+    public function getUser(): ?User
     {
         return $this->user;
     }
 
-    public function setUser(User $user): self
+    public function setUser(?User $user): self
     {
         $this->user = $user;
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, CommandeProduit>
+     */
+    public function getCommandeProduits(): Collection
+    {
+        return $this->commandeProduits;
+    }
+
+    public function addCommandeProduit(CommandeProduit $commandeProduit): self
+    {
+        if (!$this->commandeProduits->contains($commandeProduit)) {
+            $this->commandeProduits[] = $commandeProduit;
+            $commandeProduit->setCommande($this);
+        }
+        return $this;
+    }
+
+    public function removeCommandeProduit(CommandeProduit $commandeProduit): self
+    {
+        if ($this->commandeProduits->removeElement($commandeProduit)) {
+            if ($commandeProduit->getCommande() === $this) {
+                $commandeProduit->setCommande(null);
+            }
+        }
         return $this;
     }
 
@@ -76,42 +102,14 @@ class Commande
         return $this;
     }
 
-    public function getCreatedAt(): \DateTimeInterface
+    public function getDateCreation(): \DateTimeInterface
     {
-        return $this->createdAt;
+        return $this->dateCreation;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    public function setDateCreation(\DateTimeInterface $dateCreation): self
     {
-        $this->createdAt = $createdAt;
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, CommandeProduit>
-     */
-    public function getCommandeProduits(): Collection
-    {
-        return $this->commandeProduits;
-    }
-
-    public function addCommandeProduit(CommandeProduit $commandeProduit): self
-    {
-        if (!$this->commandeProduits->contains($commandeProduit)) {
-            $this->commandeProduits[] = $commandeProduit;
-            $commandeProduit->setCommande($this);
-        }
-        return $this;
-    }
-
-    public function removeCommandeProduit(CommandeProduit $commandeProduit): self
-    {
-        if ($this->commandeProduits->removeElement($commandeProduit)) {
-            // Définir le côté propriétaire à null (sauf si déjà changé)
-            if ($commandeProduit->getCommande() === $this) {
-                $commandeProduit->setCommande(null);
-            }
-        }
+        $this->dateCreation = $dateCreation;
         return $this;
     }
 }

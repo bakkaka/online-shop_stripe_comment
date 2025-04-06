@@ -34,6 +34,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private Collection $commentaires;
     #[ORM\Column(type: 'boolean')]
    private bool $isVerified = false;
+   
+   #[ORM\OneToOne(mappedBy: 'user', targetEntity: Cart::class, cascade: ['persist', 'remove'])]
+private ?Cart $cart = null;
+
+#[ORM\OneToMany(mappedBy: 'user', targetEntity: Commande::class)]
+private Collection $commandes;
 
     
 
@@ -41,6 +47,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->produits = new ArrayCollection();
         $this->commentaires = new ArrayCollection();
+        
     }
 
     /**
@@ -203,5 +210,50 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->username = $username;
         return $this;
     }
+   
+    public function getCart(): ?Cart
+{
+    return $this->cart;
+}
 
+public function setCart(?Cart $cart): self
+{
+    if ($cart === null && $this->cart !== null) {
+        $this->cart->setUser(null);
+    }
+
+    if ($cart !== null && $cart->getUser() !== $this) {
+        $cart->setUser($this);
+    }
+
+    $this->cart = $cart;
+    return $this;
+}
+
+/**
+ * @return Collection<int, Commande>
+ */
+public function getCommandes(): Collection
+{
+    return $this->commandes;
+}
+
+public function addCommande(Commande $commande): self
+{
+    if (!$this->commandes->contains($commande)) {
+        $this->commandes[] = $commande;
+        $commande->setUser($this);
+    }
+    return $this;
+}
+
+public function removeCommande(Commande $commande): self
+{
+    if ($this->commandes->removeElement($commande)) {
+        if ($commande->getUser() === $this) {
+            $commande->setUser(null);
+        }
+    }
+    return $this;
+}
 }

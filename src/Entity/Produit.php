@@ -22,8 +22,7 @@ class Produit
     #[ORM\Column(type: 'text')]
     private string $description;
 
-    #[ORM\Column(type: 'string', length: 255)]
-    private string $categorie;
+    
 
     #[ORM\Column(type: 'string', length: 100)]
     private string $pays;
@@ -62,11 +61,17 @@ class Produit
     #[ORM\OneToMany(targetEntity: Commentaire::class, mappedBy: 'produit', orphanRemoval: true)]
     private Collection $commentaires;
 
+   // #[ORM\ManyToMany(targetEntity: Categorie::class, inversedBy: 'produits')]
+   // private Collection $categories;
+   #[ORM\ManyToOne(targetEntity: Categorie::class, inversedBy: 'produits', cascade: ['persist'])]
+   private ?Categorie $categorie = null;
+
     public function __construct()
     {
         $this->images = new ArrayCollection();
         $this->dateCreation = new \DateTime();
         $this->commentaires = new ArrayCollection();
+    
     }
 
     // Getters et Setters (ceux déjà définis précédemment)
@@ -98,16 +103,7 @@ class Produit
         return $this;
     }
 
-    public function getCategorie(): string
-    {
-        return $this->categorie;
-    }
-
-    public function setCategorie(string $categorie): self
-    {
-        $this->categorie = $categorie;
-        return $this;
-    }
+   
 
     public function getPays(): string
     {
@@ -147,11 +143,7 @@ class Produit
         return $this->etat;
     }
 
-   // public function setEtat(?string $etat): self
-    //{
-     //   $this->etat = $etat;
-    //    return $this;
-   // }
+  
 
    public function setEtat(?string $etat): self
 {
@@ -252,4 +244,34 @@ class Produit
 
         return $this;
     }
+    public function getCategorie(): ?Categorie
+    {
+       return $this->categorie;
+    }
+
+    public function setCategorie(?Categorie $categorie): static
+    {
+      $this->categorie = $categorie;
+
+        return $this;
+    }
+
+    //public function getCategories(): Collection
+    //{
+    //    return $this->categories;
+   // }
+
+   // public function addCategorie(Categorie $categorie): self
+   // {
+     //   if (!$this->categories->contains($categorie)) {
+    //        $this->categories->add($categorie);
+    //    }
+    //    return $this;
+   // }
+
+   // public function removeCategorie(Categorie $categorie): self
+    //{
+    //    $this->categories->removeElement($categorie);
+    //    return $this;
+    //}
 }

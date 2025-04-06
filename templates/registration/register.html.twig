@@ -3,17 +3,51 @@
 {% block title %}Register{% endblock %}
 
 {% block body %}
-    <h1>Register</h1>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h1 class="h3 mb-0">Register</h1>
+                    </div>
+                    <div class="card-body">
+                        {{ form_errors(registrationForm) }}
 
-    {{ form_errors(registrationForm) }}
+                        {{ form_start(registrationForm) }}
+                            <div class="mb-3">
+                                {{ form_row(registrationForm.email, {
+                                    'attr': {'class': 'form-control'},
+                                    'label_attr': {'class': 'form-label'}
+                                }) }}
+                            </div>
+                            
+                            <div class="mb-3">
+                                {{ form_row(registrationForm.username, {
+                                    'attr': {'class': 'form-control'},
+                                    'label_attr': {'class': 'form-label'}
+                                }) }}
+                            </div>
+                            
+                            <div class="mb-3">
+                                {{ form_row(registrationForm.plainPassword, {
+                                    'label': 'Password',
+                                    'attr': {'class': 'form-control'},
+                                    'label_attr': {'class': 'form-label'}
+                                }) }}
+                            </div>
+                            
+                            <div class="mb-3 form-check">
+                                {{ form_row(registrationForm.agreeTerms, {
+                                    'label_attr': {'class': 'form-check-label'},
+                                    'attr': {'class': 'form-check-input'}
+                                }) }}
+                            </div>
 
-    {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
-        }) }}
-        {{ form_row(registrationForm.agreeTerms) }}
-
-        <button type="submit" class="btn">Register</button>
-    {{ form_end(registrationForm) }}
+                            <button type="submit" class="btn btn-primary">Register</button>
+                        {{ form_end(registrationForm) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

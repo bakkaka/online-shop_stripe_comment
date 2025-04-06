@@ -1,0 +1,80 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon Panier{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <h1>Mon Panier</h1>
+    
+    {% if cart.items.count > 0 %}
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Produit</th>
+                        <th>Prix</th>
+                        <th>Quantité</th>
+                        <th>Total</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for item in cart.items %}
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <img src="{{ asset('uploads/images/' ~ item.produit.images[0].url) }}" 
+                                     alt="{{ item.produit.nom }}" 
+                                     style="width: 50px; height: 50px; object-fit: cover;">
+                                <div class="ms-3">
+                                    <h5 class="mb-0">{{ item.produit.nom }}</h5>
+                                </div>
+                            </div>
+                        </td>
+                        <td>{{ item.produit.prix|format_currency('EUR') }}</td>
+                        <td>
+                            <div class="input-group" style="width: 120px;">
+                                <input type="number" class="form-control" 
+                                       value="{{ item.quantity }}" min="1">
+                                <button class="btn btn-outline-secondary" type="button">
+                                    <i class="bi bi-arrow-clockwise"></i>
+                                </button>
+                            </div>
+                        </td>
+                        <td>{{ item.total|format_currency('EUR') }}</td>
+                        <td>
+                            <a href="{{ path('app_cart_remove', {'id': item.id}) }}" 
+                               class="btn btn-danger btn-sm">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="3" class="text-end fw-bold">Total</td>
+                        <td colspan="2" class="fw-bold">{{ cart.total|format_currency('EUR') }}</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        
+        <div class="text-end">
+            <a href="{{ path('app_home') }}" class="btn btn-outline-secondary">
+                Continuer mes achats
+            </a>
+            <a href="{{ path('app_cart_checkout') }}" class="btn btn-primary">
+                Passer la commande
+            </a>
+        </div>
+    {% else %}
+        <div class="alert alert-info">
+            Votre panier est vide
+        </div>
+        <a href="{{ path('app_home') }}" class="btn btn-primary">
+            Commencer mes achats
+        </a>
+    {% endif %}
+</div>
+{% endblock %}

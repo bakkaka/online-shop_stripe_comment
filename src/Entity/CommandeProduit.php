@@ -15,52 +15,69 @@ class CommandeProduit
 
     #[ORM\ManyToOne(targetEntity: Commande::class, inversedBy: 'commandeProduits')]
     #[ORM\JoinColumn(nullable: false)]
-    private Commande $commande;
+    private ?Commande $commande = null;
 
     #[ORM\ManyToOne(targetEntity: Produit::class)]
     #[ORM\JoinColumn(nullable: false)]
-    private Produit $produit;
+    private ?Produit $produit = null;
 
     #[ORM\Column(type: 'integer')]
-    private int $quantite;
+    private int $quantity;
 
-    // Getters et Setters
+    #[ORM\Column(type: 'float')]
+    private float $prixUnitaire;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getCommande(): Commande
+    public function getCommande(): ?Commande
     {
         return $this->commande;
     }
 
-    public function setCommande(Commande $commande): self
+    public function setCommande(?Commande $commande): self
     {
         $this->commande = $commande;
         return $this;
     }
 
-    public function getProduit(): Produit
+    public function getProduit(): ?Produit
     {
         return $this->produit;
     }
 
-    public function setProduit(Produit $produit): self
+    public function setProduit(?Produit $produit): self
     {
         $this->produit = $produit;
         return $this;
     }
 
-    public function getQuantite(): int
+    public function getQuantity(): int
     {
-        return $this->quantite;
+        return $this->quantity;
     }
 
-    public function setQuantite(int $quantite): self
+    public function setQuantity(int $quantity): self
     {
-        $this->quantite = $quantite;
+        $this->quantity = $quantity;
         return $this;
+    }
+
+    public function getPrixUnitaire(): float
+    {
+        return $this->prixUnitaire;
+    }
+
+    public function setPrixUnitaire(float $prixUnitaire): self
+    {
+        $this->prixUnitaire = $prixUnitaire;
+        return $this;
+    }
+
+    public function getTotal(): float
+    {
+        return $this->prixUnitaire * $this->quantity;
     }
 }

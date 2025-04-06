@@ -68,12 +68,16 @@ class AppFixtures extends Fixture
             $produit->setNom($produitData['nom']);
             $produit->setDescription($produitData['description']);
             $produit->setPrix($produitData['prix']);
+           // $produit->setPays($produitData['pays']);
+            $produit->setDisponible($produitData['disponible']);
+            $produit->setStock($produitData['stock']);
+            $produit->setEtat($produitData['etat']);
             // Note: Pour les images, vous devrez les ajouter manuellement dans public/uploads/images/
             $manager->persist($produit);
 
             // Création de commentaires pour chaque produit
             $commentaire = new Commentaire();
-            $commentaire->setContent('Super produit! Je recommande.');
+            $commentaire->setTexte('Super produit! Je recommande.');
             $commentaire->setCreatedAt(new \DateTimeImmutable());
             $commentaire->setProduit($produit);
             $commentaire->setUser($user);

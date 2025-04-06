@@ -1,0 +1,13 @@
+Projet de vente commence le 24/03/2025
+
+echo "# online-shop_stripe_comment" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/bakkaka/online-shop_stripe_comment.git
+git push -u origin main
+
+git remote add origin https://github.com/bakkaka/online-shop_stripe_comment.git
+git branch -M main
+git push -u origin main
